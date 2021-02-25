@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import { chdir } from 'process'
+import { ChallengeBox } from '../components/ChallengeBox'
 import { CompletedChallenges } from '../components/CompletedChallenges'
 import { Countdowm } from '../components/Countdown'
 import { ExperienceBar } from "../components/ExperienceBar"
@@ -24,7 +26,9 @@ export default function Home() {
           <Countdowm/>
         </div>
 
-        <div></div>
+        <div>
+          <ChallengeBox/>
+        </div>
       </section>
     </div>
 

@@ -1,30 +1,52 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { ChallengesContext } from '../contexts/ChallegensContext';
 import styles from '../styles/components/Countdowm.module.css'
 
-export function Countdowm(){
-    const [time, setTime]=useState(25*60);
-    const [active, setActive]=useState(false);
 
-    const minutes = Math.floor(time/60);
-    const seconds = time%60;
+let countdownTimeout: NodeJS.Timeout;
+export function Countdowm() {
+
+    const {startNewChallenge} =useContext(ChallengesContext)
+
+
+
+    const [time, setTime] = useState(0.05 * 60);
+    const [isActive, setIsActive] = useState(false);
+    const[hasFinished, setHasFinish]= useState(false);
+
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
 
     const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('');
 
     const [secondLeft, secondRight] = String(seconds).padStart(2, '0').split('');
 
-    function starCountdonw(){
-        setActive(true);
+    function starCountdonw() {
+        setIsActive(true);
     }
 
-    useEffect(() =>{
-        if(active && time > 0) {
-            setTimeout(()=>{
-                setTime(time -1)
-            }, 1000)
-        }
-    }, [active, time]) //contador 
+    function resetCountdown(){
+        clearTimeout(countdownTimeout); //clear  functionf
+        setIsActive(false);
+        setTime(0.05*60);
 
-    return(
+    }
+
+    useEffect(() => {
+        if (isActive && time > 0) {
+            countdownTimeout = setTimeout(() => {
+                setTime(time - 1)
+            }, 1000)
+        } else if(isActive && time===0){
+            setHasFinish(true);
+            setIsActive(false);
+            startNewChallenge();
+
+
+        }
+    }, [isActive, time]) //contador 
+
+    return (
         <div>
             <div className={styles.countdownContainer}>
                 <div>
@@ -37,10 +59,34 @@ export function Countdowm(){
                     <span>{secondRight}</span>
                 </div>
             </div>
-            <button type="button" 
-            className={styles.CountdonwButton}
-            onClick={starCountdonw}
-            >Iniciar um ciclico</button>
-        </div>
+            {hasFinished ? (
+               <button type="button"
+               disabled
+               className={styles.CountdonwButton}
+               >
+               Ciclo encerrado
+           </button>
+            ) : (
+                <>
+                {isActive ? (<button type="button"
+                className={`${styles.CountdonwButton} ${styles.CountdonwButtonActive}`}
+                onClick={resetCountdown}>
+                Abandonar ciclo
+            </button>
+            ) : (<button type="button"
+                className={styles.CountdonwButton}
+                onClick={starCountdonw}
+            >
+                Iniciar um ciclo
+            </button>)
+            }
+                </> //precisar estar em torno de um fragment
+            )}
+
+           
+
+
+
+        </div >
     )
 }
