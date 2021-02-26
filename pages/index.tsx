@@ -5,6 +5,7 @@ import { CompletedChallenges } from '../components/CompletedChallenges'
 import { Countdowm } from '../components/Countdown'
 import { ExperienceBar } from "../components/ExperienceBar"
 import { Profile } from '../components/profile'
+import { CountdownProvider } from '../contexts/countDownContext'
 
 
 
@@ -19,6 +20,7 @@ export default function Home() {
       </Head>
 
       <ExperienceBar />
+      <CountdownProvider>
       <section>
         <div className="">
           <Profile/>
@@ -30,6 +32,7 @@ export default function Home() {
           <ChallengeBox/>
         </div>
       </section>
+      </CountdownProvider>
     </div>
 
   )
